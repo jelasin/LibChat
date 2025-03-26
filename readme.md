@@ -26,6 +26,14 @@ make
 
 ## Usage
 
+complete the `config.ini` file with your own configuration.
+
+```sh
+cp config.ini.demo config.ini
+```
+
+write your own code in `Source/main.c` and compile it.
+
 ## API Documentation
 
 ### ChatModel
