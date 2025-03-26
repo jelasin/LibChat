@@ -148,9 +148,9 @@ assistant: You're so welcome! 😊 If there's anything you'd like assistance wit
 
 Todo:
 
-* [*] deepseek, openai, gemini
-* [*] stream input and output
-* [*] Multi-round Conversation
+* [x] deepseek, openai, gemini
+* [x] stream input and output
+* [x] Multi-round Conversation
 * [ ] rebuilding the design of the project
 * [ ] Support agent, tools, tts, picture, video etc.
 * [ ] Add claude model
