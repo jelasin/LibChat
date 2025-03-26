@@ -81,9 +81,9 @@ write your own code in `Source/main.c` and compile it.
 * `int init_output_msg(output_msg_t *output);`
 * `int recv_msg(output_msg_t *output);`
 * `int defaut_stream_print_msg();`
-* `int stream_recv_msg(output_msg_t *output, ...);`
+* `int stream_recv_msg(output_msg_t *output, int (*func_ptr)(char*));`
 * * output: the output message.
-* * ...: the arguments for the stream_print_msg_hook.
+* * func_ptr: the arguments for the stream_print_msg_hook.
 * `int destroy_output(output_msg_t *output);`
 
 HOOKS:
