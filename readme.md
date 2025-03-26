@@ -140,6 +140,8 @@ int main()
     
         stream_wait_all();
     }
+    
+    destroy_stream_io();
 
     //-------------------------------------------------------
 
@@ -165,6 +167,7 @@ Todo:
 * [x] openai, deepseek, gemini, etc. (use openai api)
 * [x] stream input and output
 * [x] Multi-round Conversation
+* [ ] Support anthropic, gork etc.
 * [ ] rebuilding the design of the project
 * [ ] Support agent, tools, tts, picture, video etc.
 * [ ] Add more features

@@ -61,9 +61,9 @@ int main()
     
         stream_wait_all();
     }
+    destroy_stream_io();
 
     //-------------------------------------------------------
-
     destroy_output(&output);
     destroy_input(&ms);
     destroy_model();
