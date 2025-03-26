@@ -66,6 +66,8 @@ make
 
 ## Examples
 
+you can complete the `Source/main.c` file with the following code to test the libchat.so library.
+
 ```c
 #include "model.h"
 #include "input.h"
