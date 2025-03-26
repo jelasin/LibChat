@@ -3,8 +3,15 @@
 #include "output.h"
 #include "stream_io.h"
 
+int my_stream_print_msg(char* stream_data)
+{
+    fprintf(stderr, "|%s|", stream_data);
+    return 0;
+}
+
 int main()
 {
+    // must init model first
     init_model("config.ini");
     
     model_setting_t ms;
@@ -31,6 +38,7 @@ int main()
     // printf("Assistant: %s\n", output.content);
     //-------------------------------------------------------
 
+    // you can set other model settings here after init_input_msg()
     ms.stream = true;
     set_model_setting(&ms);
 
@@ -39,13 +47,13 @@ int main()
     stream_send_msg("Hello, how are you?", USER_ROLE | ECHO_MSG);
     
     fprintf(stderr, "%s", "assistant: ");
-    stream_recv_msg(&output);
+    stream_recv_msg(&output, NULL);
 
     stream_wait_all();
 
     stream_send_msg("thank you!", USER_ROLE | ECHO_MSG);
     fprintf(stderr, "%s", "assistant: ");
-    stream_recv_msg(&output);
+    stream_recv_msg(&output, my_stream_print_msg);
 
     stream_wait_all();
     char content [0x1024];
@@ -57,7 +65,7 @@ int main()
         stream_send_msg(content, USER_ROLE | ECHO_MSG);
 
         fprintf(stderr, "%s", "Assistant: ");
-        stream_recv_msg(&output);
+        stream_recv_msg(&output, NULL);
     
         stream_wait_all();
     }

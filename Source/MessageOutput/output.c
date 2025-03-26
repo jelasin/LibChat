@@ -3,6 +3,8 @@
 output_msg_t *g_output_messages = NULL;
 char *G_STRAM_OUTPUT_DATA = NULL;
 
+static int defaut_stream_print_msg(char* stream_data);
+static int (*stream_print_msg_hook)(char*) = NULL;
 static int parse_response(char *json_msg, output_msg_t *output);
 static int stream_parse_response(char *json_msg, output_msg_t *output);
 
@@ -44,6 +46,8 @@ int init_output_msg(output_msg_t *output)
     memset(G_STRAM_OUTPUT_DATA, 0, strlen(G_STRAM_OUTPUT_DATA) + 1);
     G_STRAM_OUTPUT_DATA[0] = '\0';
 
+    stream_print_msg_hook = defaut_stream_print_msg;
+    
     return 0;
 }
 
@@ -153,13 +157,12 @@ int recv_msg(output_msg_t *output)
     return 0;
 }
 
-int stream_print_msg()
+static int defaut_stream_print_msg(char* stream_data)
 {
-    fprintf(stderr, "%s", G_STRAM_OUTPUT_DATA);
-
+    fprintf(stderr, "%s", stream_data);
+    
     return 0;
 }
-
 static int stream_parse_response(char *json_msg, output_msg_t *output)
 {
     // 解析 JSON
@@ -298,7 +301,7 @@ void* stream_consumer(void *arg)
                     pthread_mutex_unlock(&stream_lock);
                     return NULL;
                 }
-                stream_print_msg();
+                stream_print_msg_hook(G_STRAM_OUTPUT_DATA);
             }
             line = strtok_r(NULL, "\n\n", &saveptr);
         }
@@ -314,8 +317,12 @@ void* stream_consumer(void *arg)
     return NULL;
 }
 
-int stream_recv_msg(output_msg_t *output)
+int stream_recv_msg(output_msg_t *output, int (*func_ptr)(char*))
 {
+    if (func_ptr != NULL)
+    {
+        stream_print_msg_hook = func_ptr;
+    }
 
     if (pthread_create(&stream_consumer_thread, NULL, stream_consumer, (void*)output) < 0)
     {

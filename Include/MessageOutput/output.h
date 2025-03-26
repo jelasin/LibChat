@@ -15,9 +15,7 @@ extern int init_output_msg(output_msg_t *output);
 
 extern int recv_msg(output_msg_t *output);
 
-extern int stream_print_msg();
-
-extern int stream_recv_msg(output_msg_t *output);
+extern int stream_recv_msg(output_msg_t *output, int (*func_ptr)(char*));
 
 extern int destroy_output(output_msg_t *output);
 
