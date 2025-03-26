@@ -1,9 +1,9 @@
 #include "model.h"
 
-char *OPENAI_BASE_URL = NULL;
-char *OPENAI_API_KEY = NULL;
+char *BASE_URL = NULL;
+char *API_KEY = NULL;
 
-char *AUTH_HEADER = NULL;
+char *OPENAI_AUTH_HEADER = NULL;
 char *CHAT_COMPLETION_URL = NULL;
 
 static size_t response_writer(void *ptr, size_t size, size_t nmemb, void **userdata);
@@ -22,7 +22,7 @@ int init_model(char *cfg_path)
     
     for (int i = 0; i < cfg.config_count; i++)
     {
-        if (strcmp(cfg.config_item[i].config_name, "OPENAI_BASE_URL") == 0)
+        if (strcmp(cfg.config_item[i].config_name, "BASE_URL") == 0)
         {
             if (set_openai_base_url(cfg.config_item[i].config_value) < 0)
             {
@@ -30,7 +30,7 @@ int init_model(char *cfg_path)
                 return -1;
             }
         }
-        else if (strcmp(cfg.config_item[i].config_name, "OPENAI_API_KEY") == 0)
+        else if (strcmp(cfg.config_item[i].config_name, "API_KEY") == 0)
         {
             if (set_openai_api_key(cfg.config_item[i].config_value) < 0)
             {
@@ -40,21 +40,21 @@ int init_model(char *cfg_path)
         }
     }
 
-    AUTH_HEADER = malloc(strlen("Authorization: Bearer ") + strlen(OPENAI_API_KEY) + 1);
-    if (AUTH_HEADER == NULL)
+    OPENAI_AUTH_HEADER = malloc(strlen("Authorization: Bearer ") + strlen(API_KEY) + 1);
+    if (OPENAI_AUTH_HEADER == NULL)
     {
-        ERROR("[init_model] malloc AUTH_HEADER failed");
+        ERROR("[init_model] malloc OPENAI_AUTH_HEADER failed");
         return -1;
     }
-    sprintf(AUTH_HEADER, "Authorization: Bearer %s", OPENAI_API_KEY);
+    sprintf(OPENAI_AUTH_HEADER, "Authorization: Bearer %s", API_KEY);
 
-    CHAT_COMPLETION_URL = malloc(strlen(OPENAI_BASE_URL) + strlen("/chat/completions") + 1);
+    CHAT_COMPLETION_URL = malloc(strlen(BASE_URL) + strlen("/chat/completions") + 1);
     if (CHAT_COMPLETION_URL == NULL)
     {
         ERROR("[init_model] malloc CHAT_COMPLETION_URL failed");
         return -1;
     }
-    sprintf(CHAT_COMPLETION_URL, "%s/chat/completions", OPENAI_BASE_URL);
+    sprintf(CHAT_COMPLETION_URL, "%s/chat/completions", BASE_URL);
 
     return 0;
 }
@@ -66,9 +66,9 @@ static int set_openai_base_url(const char *url)
         ERROR("[set_openai_base_url] url is NULL");
         return -1;
     }
-    OPENAI_BASE_URL = strdup(url);
+    BASE_URL = strdup(url);
 #if defined(DEBUG)
-    INFO("[set_openai_base_url] url: %s", OPENAI_BASE_URL);
+    INFO("[set_openai_base_url] url: %s", BASE_URL);
 #endif
 
     return 0;
@@ -81,9 +81,9 @@ static int set_openai_api_key(const char *key)
         ERROR("[set_openai_api_key] key is NULL");
         return -1;
     }
-    OPENAI_API_KEY = strdup(key);
+    API_KEY = strdup(key);
 #if defined(DEBUG)
-    INFO("[set_openai_api_key] key: %s", OPENAI_API_KEY);
+    INFO("[set_openai_api_key] key: %s", API_KEY);
 #endif
     return 0;
 }
@@ -109,14 +109,14 @@ static size_t response_writer(void *ptr, size_t size, size_t nmemb, void **userd
 
 int list_models() 
 {
-    if (OPENAI_BASE_URL == NULL || OPENAI_API_KEY == NULL) 
+    if (BASE_URL == NULL || API_KEY == NULL) 
     {
-        ERROR("[list_models] OPENAI_BASE_URL or OPENAI_API_KEY is NULL");
+        ERROR("[list_models] BASE_URL or API_KEY is NULL");
         return -1;
     }
 
-    char* query_url = malloc(strlen(OPENAI_BASE_URL) + strlen("/models") + 1);
-    sprintf(query_url, "%s/models", OPENAI_BASE_URL);
+    char* query_url = malloc(strlen(BASE_URL) + strlen("/models") + 1);
+    sprintf(query_url, "%s/models", BASE_URL);
 
     curl_global_init(CURL_GLOBAL_DEFAULT);
     CURL *curl = curl_easy_init();
@@ -130,7 +130,7 @@ int list_models()
 
     struct curl_slist *headers = NULL;
     headers = curl_slist_append(headers, "Content-Type: application/json");
-    headers = curl_slist_append(headers, AUTH_HEADER);
+    headers = curl_slist_append(headers, OPENAI_AUTH_HEADER);
 
     char *response = malloc(1);
     response[0] = '\0';
@@ -195,20 +195,20 @@ int list_models()
 
 int destroy_model()
 {
-    if (OPENAI_BASE_URL != NULL)
+    if (BASE_URL != NULL)
     {
-        free(OPENAI_BASE_URL);
-        OPENAI_BASE_URL = NULL;
+        free(BASE_URL);
+        BASE_URL = NULL;
     }
-    if (OPENAI_API_KEY != NULL)
+    if (API_KEY != NULL)
     {
-        free(OPENAI_API_KEY);
-        OPENAI_API_KEY = NULL;
+        free(API_KEY);
+        API_KEY = NULL;
     }
-    if (AUTH_HEADER != NULL)
+    if (OPENAI_AUTH_HEADER != NULL)
     {
-        free(AUTH_HEADER);
-        AUTH_HEADER = NULL;
+        free(OPENAI_AUTH_HEADER);
+        OPENAI_AUTH_HEADER = NULL;
     }
     if (CHAT_COMPLETION_URL != NULL)
     {

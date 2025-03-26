@@ -168,19 +168,25 @@ extern int format_system_content(char* content);
 extern int format_assistant_content(char* content);
 
 // static model_setting_t g_model;
+
 // static input_msg_t *g_input_messages = NULL;
+
 // static uint8_t messages_count = 0;
+
 // static uint64_t current_turn = 0;
 
 // static int init_model_setting(model_setting_t *input, uint8_t max_turns);
 
 // static int set_default_model_setting(model_setting_t *input);
+
 // static int format_msg_content(char* content, char* role);
 
 // static int real_send_msg(char *json_msg);
+
 // static size_t response_writer(void *ptr, size_t size, size_t nmemb, void **userdata);
 
 // static int stream_real_send_msg(char *json_msg);
+
 // static size_t stream_response_writer(void *ptr, size_t size, size_t nmemb, void **userdata);
 
 #endif   /* __INPUT_H__ */

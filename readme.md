@@ -88,22 +88,26 @@ int main()
     
     model_setting_t ms;
     empty_model_setting(&ms);
-    ms.model = "deepseek-chat";
+    char model_name[0x20];
+    memset(model_name, 0, 0x20);
+    fgets(model_name, 0x20, stdin);
+    model_name[strcspn(model_name, "\n")] = '\0';
+    ms.model = model_name;
+
     init_input_msg(&ms, 10);
     output_msg_t output;
     init_output_msg(&output);
 
     // -----------------------------------------------------
-    send_msg("You are a helpful chatbot.", SYSTEM_ROLE);
-    send_msg("Hello, how are you?", USER_ROLE | ECHO_MSG);
+    // send_msg("Hello, how are you?", USER_ROLE | ECHO_MSG);
 
-    recv_msg(&output);
-    printf("Assistant: %s\n", output.content);
+    // recv_msg(&output);
+    // printf("Assistant: %s\n", output.content);
 
-    send_msg("thank you!", USER_ROLE | ECHO_MSG);
+    // send_msg("thank you!", USER_ROLE | ECHO_MSG);
 
-    recv_msg(&output);
-    printf("Assistant: %s\n", output.content);
+    // recv_msg(&output);
+    // printf("Assistant: %s\n", output.content);
     //-------------------------------------------------------
 
     ms.stream = true;
@@ -113,16 +117,30 @@ int main()
 
     stream_send_msg("Hello, how are you?", USER_ROLE | ECHO_MSG);
     
-    fprintf(stderr, "%s", "assistant: ");
+    fprintf(stderr, "%s", "Assistant: ");
     stream_recv_msg(&output);
 
     stream_wait_all();
 
     stream_send_msg("thank you!", USER_ROLE | ECHO_MSG);
-    fprintf(stderr, "%s", "assistant: ");
+    fprintf(stderr, "%s", "Assistant: ");
     stream_recv_msg(&output);
 
     stream_wait_all();
+    char content [0x1024];
+    while (true)
+    {
+        memset(content, 0, 0x1024);
+        fgets(content, 0x1024, stdin);
+
+        stream_send_msg(content, USER_ROLE | ECHO_MSG);
+
+        fprintf(stderr, "%s", "Assistant: ");
+        stream_recv_msg(&output);
+    
+        stream_wait_all();
+    }
+
     //-------------------------------------------------------
 
     destroy_output(&output);
@@ -135,24 +153,19 @@ int main()
 
 ```output
 User: Hello, how are you?
-Assistant: Hello! I'm just a virtual assistant, so I don't have feelings, but I'm here and ready to help you. How are you doing? 😊
+Assistant: Hello! 😊 I'm just a virtual assistant, so I don't have feelings, but I'm here and ready to help with anything you need! How are you doing today? 🌟
 User: thank you!
-Assistant: You're very welcome! 😊 If there's anything you need help with or just want to chat, feel free to let me know. Have a great day! 🌟
-User: Hello, how are you?
-assistant: Hello! 😊 I'm just a virtual assistant, so I don't have feelings, but I'm here and ready to help with anything you need! How are you doing today? 🌟
-User: thank you!
-assistant: You're so welcome! 😊 If there's anything you'd like assistance with, just let me know—I'm here to help! 🌟 Have an amazing day! 🚀
+Assistant: You're so welcome! 😊 If there's anything you'd like assistance with, just let me know—I'm here to help! 🌟 Have an amazing day! 🚀
 ```
 
 ## Development
 
 Todo:
 
-* [x] deepseek, openai, gemini
+* [x] openai, deepseek, gemini, etc. (use openai api)
 * [x] stream input and output
 * [x] Multi-round Conversation
 * [ ] rebuilding the design of the project
 * [ ] Support agent, tools, tts, picture, video etc.
-* [ ] Add claude model
 * [ ] Add more features
 * [ ] Add more documentation

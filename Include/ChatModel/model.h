@@ -6,10 +6,10 @@
 #include "cJSON.h"
 #include <stdbool.h>
 
-extern char *OPENAI_BASE_URL;
-extern char *OPENAI_API_KEY;
+extern char *BASE_URL;
+extern char *API_KEY;
 
-extern char *AUTH_HEADER;
+extern char *OPENAI_AUTH_HEADER;
 extern char *CHAT_COMPLETION_URL;
 
 /*

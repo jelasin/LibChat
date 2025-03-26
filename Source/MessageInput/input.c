@@ -507,7 +507,7 @@ static int real_send_msg(char *json_msg)
         struct curl_slist *headers = NULL;
         headers = curl_slist_append(headers, "Content-Type: application/json");
         headers = curl_slist_append(headers, "Accept: application/json");
-        headers = curl_slist_append(headers, AUTH_HEADER);
+        headers = curl_slist_append(headers, OPENAI_AUTH_HEADER);
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_msg);
@@ -657,7 +657,7 @@ void* stream_producer(void* arg)
         struct curl_slist *headers = NULL;
         headers = curl_slist_append(headers, "Content-Type: application/json");
         headers = curl_slist_append(headers, "Accept: application/json");
-        headers = curl_slist_append(headers, AUTH_HEADER);
+        headers = curl_slist_append(headers, OPENAI_AUTH_HEADER);
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
         const char *json_data = (char*)arg;

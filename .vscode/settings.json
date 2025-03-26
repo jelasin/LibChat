@@ -67,7 +67,8 @@
         "ostream": "c",
         "stdexcept": "c",
         "streambuf": "c",
-        "cinttypes": "c"
+        "cinttypes": "c",
+        "limits.h": "c"
     },
     "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools"
 }
