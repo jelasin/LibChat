@@ -206,6 +206,7 @@ Todo:
 * [x] openai, deepseek, gemini, etc. (use openai api)
 * [x] stream input and output
 * [x] Multi-round Conversation
+* [ ] Disable libcurl
 * [ ] Support anthropic, gork etc. (not supported openai api)
 * [ ] rebuilding the design of the project
 * [ ] Support agent, tools, tts, picture, video etc.
